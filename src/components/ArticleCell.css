@@ -1,0 +1,10 @@
+.article-cell {
+  /* padding: 10px;  */
+  /* width:  */
+  /* display: inline-block;   */
+   /* display: flex  */
+}
+
+.article-cell > div {
+  border: 1px solid #eee;
+}

@@ -1,4 +1,4 @@
-/* App.css at the start of tutorial 1 */
+/* App.css at the start of tutorial 1 
 
 .App {
   text-align: center;
@@ -37,4 +37,10 @@ li {
   font-weight: 400;
   width: 20%;
   text-align: left;
+}
+*/
+
+.maxWidth {
+  max-width: 1000px;
+  margin: 0 auto;
 }

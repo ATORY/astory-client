@@ -1,0 +1,9 @@
+.write {
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.write-wrapper .toolbar {
+  border: none;
+  padding: 4.5% 13%;
+}

@@ -4,15 +4,16 @@ import {
   graphql,
 } from 'react-apollo';
 
+import Head from './Head';
 
 const ArticlePreview = ({data: { loading, error, article }}) => {
   return (
     <div>
-      <div className="articleName">
-        {article ? article.title : 'Loading....'}
-      </div>
-
-      <div>Loading....</div>
+      <Head />
+      <article>
+        <div>{article && article.title}</div>
+        <div>Loading....</div>
+      </article>
     </div>
   )
 }

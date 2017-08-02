@@ -1,13 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Head } from '../components';
-
 import {
   gql,
   graphql,
 } from 'react-apollo';
 
-export const ArticlesQuery = gql`
+import { Head, Nav, ArticleCell } from '../components';
+
+import './Home.css';
+
+const ArticlesQuery = gql`
 
 query ArticlesQuery($articleId: ID) {
   articles(_id: $articleId) {
@@ -16,7 +17,7 @@ query ArticlesQuery($articleId: ID) {
   }
 }
 
-`
+`;
 
 const Home = ({ match, data: { loading, error, articles } }) => {
   if(loading) {
@@ -26,17 +27,18 @@ const Home = ({ match, data: { loading, error, articles } }) => {
     return <div>{error.message}</div>
   }
   return (
-    <div className="home">
-      <Head />
-      { articles.map( article =>
-        (<div key={article._id}>
-          <Link to={`article/${article._id}`}>
-            {article.title}
-          </Link>
-        </div>)
+    <div>
+      <Head>
+        <Nav />
+      </Head>
+      <div className="maxWidth articles">
+      { articles.map( ({_id, title}) =>
+        <ArticleCell key={_id} _id={_id} title={title}/>
       )}
+      </div>
     </div>
   );
 };
+
 
 export default (graphql(ArticlesQuery)(Home));

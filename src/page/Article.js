@@ -6,7 +6,9 @@ import {
   graphql,
 } from 'react-apollo';
 
-export const articleQuery = gql`
+import './Article.css';
+
+const articleQuery = gql`
 
 query ArticleQuery($articleId: ID!) {
   article(_id: $articleId) {
@@ -28,10 +30,12 @@ const Article = ({ match, data: { loading, error, article } }) => {
     return <div>{error.message}</div>
   }
   return (
-    <div className="article">
+    <div>
       <Head />
-      <div>{article.title}</div>
-      <div>{article.content}</div>
+      <article>
+        <div>{article.title}</div>
+        <div>{article.content}</div>
+      </article>
     </div>
   );
 };

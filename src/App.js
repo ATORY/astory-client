@@ -12,10 +12,9 @@ import {
   Switch,
 } from 'react-router-dom';
 
-// import logo from './logo.svg';
 import './App.css';
 
-import { Home, Typed, Article, NotFound } from './page';
+import { Home, Typed, Article, NotFound, Write } from './page';
 
 const networkInterface = createNetworkInterface({ 
   uri: 'http://localhost:4000/graphql' 
@@ -59,6 +58,7 @@ class App extends Component {
           <div className="App">
             <Switch>
               <Route exact path="/article/:articleId" component={Article}/>
+              <Route path="/write" component={Write}/>
               <Route path="/:type" component={Typed}/>
               <Route path="/" component={Home}/>
               <Route component={ NotFound }/>
