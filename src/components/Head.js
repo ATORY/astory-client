@@ -5,7 +5,8 @@ import './Head.css';
 import logo from '../logo.svg';
 
 const Head = ({ children, match }) => {
-  const slogen = match.path === '/write' ? 'Draft' : 'Everyone has a story';
+  const isWrite = match.path === '/write'; 
+  const slogen = isWrite ? 'Draft' : 'Everyone has a story';
   return (
     <header>
       <div className="maxWidth header-bar">
@@ -15,7 +16,7 @@ const Head = ({ children, match }) => {
         </div>
         <div className='signs floatRight'>
           注册/登录
-        </div>
+        </div> 
       </div>
       {children}
     </header>
