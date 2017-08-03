@@ -1,11 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { gql, graphql } from 'react-apollo';
 
-import { userAction } from './actions';
-
 import './Login.css';
+import { authQuery } from './querys';
 
 const userLoginMutation = gql`
   mutation newUser($user: UserInput!) {
@@ -27,9 +25,14 @@ class Login extends React.Component {
     }
   }
 
+  hiden = () => {
+    const loginMask = document.getElementById('login-mask');
+    loginMask.style.display = 'none';
+  }
+
   closeLogin = (evt, shouldGoBack) => {
     evt.persist();
-    this.props.userAction({close: true});
+    this.hiden();
     if (this.props.history.action === 'PUSH' && shouldGoBack ){
       this.props.history.goBack();
     } 
@@ -40,9 +43,15 @@ class Login extends React.Component {
     const { mutate } = this.props;
     mutate({ 
       variables: { user: { email, password }},
-    }).then(({data: { user }}) => {
-      const { _id, email, userAvatar } = user;
-      // this.props.userAction({ close: true, _id, email, userAvatar});
+      refetchQueries: [ { query: authQuery }]
+      // update: (store, {data: {_id, email, userAvatar}} ) => {
+      //   const data = store.readQuery({query: authQuery });
+      //   data.user = {_id, email, userAvatar};
+      //   store.writeQuery({ query: authQuery, data });
+      // }
+    }).then((res) => {
+      // const { email, userAvatar } = user;
+      this.hiden();
       this.setState({email: '', password: ''});
     }).catch(err => {
       // show err message
@@ -63,20 +72,20 @@ class Login extends React.Component {
 
   render() {
     const { email, password } = this.state;
-    const { match, user }= this.props
-    const maskDisplay = user.close === false ? 'block' : 'none';
-    const upOrDown = user.close === false ? 'mask-box-up' : 'mask-box-down';
+    const { match }= this.props
+    // const maskDisplay = user.close === false ? 'block' : 'none';
+    // const upOrDown = user.close === false ? 'mask-box-up' : 'mask-box-down';
     const shouldGoBack = match.path==='/write';
 
     return (
-      <div className={`login mask`} style={{display: `${maskDisplay}`}}>
+      <div className={`login mask`} id='login-mask'>
         {
           shouldGoBack ?
           <i className='close' onClick={(evt) => this.closeLogin(evt, shouldGoBack)}>返回</i> :
           <i className="material-icons close" onClick={this.closeLogin}>close</i>
         }
         
-        <div className={`mask-box ${upOrDown}`}>
+        <div className='mask-box' id='login-mask-box'>
         login
         <form onSubmit={this.login}>
           <div>email:</div> 
@@ -97,7 +106,4 @@ const LoginWithMutation = graphql(
   userLoginMutation,
 )(Login);
 
-export default withRouter(connect(
-  (state) => ({ user: state.user }),
-  { userAction }
-)(LoginWithMutation));
+export default withRouter(LoginWithMutation);

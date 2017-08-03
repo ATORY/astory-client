@@ -1,23 +1,20 @@
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { gql, graphql, compose, withApollo } from 'react-apollo';
+import { 
+  // withRouter, 
+  Link 
+} from 'react-router-dom';
+import { gql, graphql, 
+  // compose, withApollo 
+} from 'react-apollo';
 
-import { userAction } from '../actions';
+// import { userAction } from '../actions';
 
 import './Head.css';
 import logo from '../logo.svg';
 import account from '../account_circle.svg';
 
-// const authQuery = gql`
-// query auth {
-//   user: auth {
-//     _id
-//     email
-//     userAvatar
-//   }
-// }
-// `;
+import { authQuery } from '../querys';
+
 
 const UserHead = ({user: { _id, email, userAvatar }}) => {
   return (
@@ -35,13 +32,11 @@ class Head extends React.Component {
   
   loginShow = (evt) => {
     evt.persist()
-    this.props.userAction({close: false});
+    const loginMask = document.getElementById('login-mask');
+    loginMask.style.display = 'block';
   }
   render() {
-    const { children, match, client } = this.props;
-    const apolloStore = client.store;
-    const applloState = apolloStore.getState();
-    console.log(applloState)
+    const { children, data } = this.props;
     const slogen = 'Everyone has a story';
     return (
       <header>
@@ -50,16 +45,16 @@ class Head extends React.Component {
             <Link to='/'><img src={logo} className='logo' alt="" /></Link>
             <p className='slogen'>{slogen}</p>
           </div>
-          {/* 
+          {
             data.loading ? 'authing...' :
-            data.auth && data.auth._id ? <UserHead user={data.auth} /> :
-          */}
+            data.user && data.user._id ? <UserHead user={data.user} /> :
             <div className='signs floatRight'>
               <div><Link to='/write'>Write</Link></div>
               <div className='btns'>
                 <button onClick={this.loginShow}>登录</button>
               </div>
             </div> 
+          }
         </div>
         {children}
       </header>
@@ -67,7 +62,7 @@ class Head extends React.Component {
   }
 };
 
-// const HeadWithData = graphql(authQuery)(Head)
+export default graphql(authQuery)(Head)
 
 // export default (connect(
 //   (state) => ({ user: state.user }),
@@ -76,10 +71,10 @@ class Head extends React.Component {
 
 // port { graphql, compose } from 'react-apollo';
 // import { connect } from 'react-redux';
-export default withApollo(
-  connect(
-    (state) => ({ user: state.user }),
-    { userAction }
-  )(Head)
-);
+// export default withApollo(
+//   connect(
+//     (state) => ({ user: state.user }),
+//     { userAction }
+//   )(Head)
+// );
 

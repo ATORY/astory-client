@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import {
   ApolloClient,
   ApolloProvider,
@@ -13,12 +12,10 @@ import {
   Switch,
 } from 'react-router-dom';
 
-import thunk from 'redux-thunk';
 
 import './App.css';
 
 import { Home, Typed, Article, NotFound, Write } from './page';
-import { userReducer } from './reducers';
 
 import Login from './Login';
 
@@ -59,26 +56,27 @@ const client = new ApolloClient({
   }
 });
 
-const store = createStore(
-  combineReducers({
-    // todos: todoReducer,
-    user: userReducer,
-    apollo: client.reducer(),
-  }),
-  {}, // initial state
-  compose(
-      applyMiddleware(client.middleware(), thunk),
-      // If you are using the devToolsExtension, you can add it here also
-      (typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined') ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
-  )
-);
+// const store = createStore(
+//   combineReducers({
+//     // todos: todoReducer,
+//     user: userReducer,
+//     apollo: client.reducer(),
+//   }),
+//   {}, // initial state
+//   compose(
+//       applyMiddleware(client.middleware(), thunk),
+//       // If you are using the devToolsExtension, you can add it here also
+//       (typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined') ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
+//   )
+// );
 
 class App extends Component {
   render() {
     return (
-      <ApolloProvider client={client} store={store} >
+      <ApolloProvider client={client} >
         <BrowserRouter>
           <div className="App">
+            <Login />
             <Switch>
               <Route exact path="/article/:articleId" component={Article}/>
               <Route path="/write" component={Write}/>
@@ -86,7 +84,7 @@ class App extends Component {
               <Route path="/" component={Home}/>
               <Route component={ NotFound }/>
             </Switch>
-            <Login />
+            
           </div>
         </BrowserRouter>
       </ApolloProvider>

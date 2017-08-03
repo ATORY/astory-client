@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
-import { connect } from 'react-redux';
+import { gql, graphql } from 'react-apollo';
 
-import { userAction } from '../actions';
 import { Head } from '../components';
 import './Write.css';
 
+import { authQuery } from '../querys';
 // var Size = Quill.import('attributors/style/size');
 // Size.whitelist = ['15px', '16px', '18px'];
 // Quill.register(Size, true);
@@ -106,24 +106,23 @@ class Write extends React.Component {
       this.writer.focus();
       this.quillRef = this.writer.getEditor();
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { data: { user, networkStatus }} = nextProps;
+    if((networkStatus === 7) && !user._id) {
+      const loginMask = document.getElementById('login-mask');
+      loginMask.style.display = 'block';
+    }
     // this.quillRef.getModule("toolbar").addHandler("image", this.imageHandler);
   }
 
-  componentWillMount() {
-    const { user } = this.props;
-    if(!user._id) {
-      this.props.userAction({close: false});
-    }
-  }
-
   render() {
-    const { user } = this.props;
-    if(!user._id) {
-      return null;
-    }
+    const { data: { user }} = this.props;
     return (
       <div>
         <Head />
+        {user && user._id &&
         <div className="write write-wrapper">
           <input  type="file" hidden 
                   ref={ fileInput => { this.fileInput = fileInput; }}
@@ -137,14 +136,16 @@ class Write extends React.Component {
                       value={this.state.text}
                       onChange={this.handleChange} />
         </div>
+        }
       </div>
     )
   }
 }
 
-export default (connect(
-  (state) => ({ user: state.user }),
-  { userAction }
-)(Write));
+export default graphql(authQuery)(Write);
+// export default (connect(
+//   (state) => ({ user: state.user }),
+//   { userAction }
+// )(Write));
 
 // export default Write;
