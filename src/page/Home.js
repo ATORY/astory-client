@@ -20,19 +20,16 @@ query ArticlesQuery($articleId: ID) {
 `;
 
 const Home = ({ match, data: { loading, error, articles } }) => {
-  if(loading) {
-    return <div>Loading...</div>
-  }
-  if(error) {
-    return <div>{error.message}</div>
-  }
   return (
     <div>
       <Head>
         <Nav />
       </Head>
       <div className="maxWidth articles">
-      { articles.map( ({_id, title}) =>
+      { 
+        loading ? <div>Loading...</div> :
+        error ? <div>{error.message}</div> : 
+        articles.map( ({_id, title}) =>
         <ArticleCell key={_id} _id={_id} title={title}/>
       )}
       </div>

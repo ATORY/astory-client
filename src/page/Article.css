@@ -3,7 +3,8 @@ article {
   max-width: 1000px;
 }
 
- article > div {
+article > div {
   max-width: 700px;
   margin: 0 auto;
 } 
+

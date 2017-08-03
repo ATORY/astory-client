@@ -1,12 +1,14 @@
 import React from 'react';
-import ReactQuill, { Quill } from 'react-quill';
+import ReactQuill from 'react-quill';
+import { connect } from 'react-redux';
 
+import { userAction } from '../actions';
 import { Head } from '../components';
 import './Write.css';
 
-var Size = Quill.import('attributors/style/size');
-Size.whitelist = ['15px', '16px', '18px'];
-Quill.register(Size, true);
+// var Size = Quill.import('attributors/style/size');
+// Size.whitelist = ['15px', '16px', '18px'];
+// Quill.register(Size, true);
 
 // const CustomButton = () => <span className="octicon octicon-star" />
 
@@ -30,9 +32,10 @@ const CustomToolbar = () => (
     </select>
     <button className="ql-image"></button>
 
-    <button className="ql-publish" style={{float: 'right', width: '100px'}}>
+    <button className='ql-publish' style={{float: 'right', width: '100px'}}>
       publish
     </button>
+    <span style={{float: 'right', width: '50px'}}>Draft</span>
   </div>
 )
 
@@ -99,12 +102,25 @@ class Write extends React.Component {
   }
 
   componentDidMount() {
-    this.writer.focus();
-    this.quillRef = this.writer.getEditor();
+    if(this.writer) {
+      this.writer.focus();
+      this.quillRef = this.writer.getEditor();
+    }
     // this.quillRef.getModule("toolbar").addHandler("image", this.imageHandler);
   }
 
+  componentWillMount() {
+    const { user } = this.props;
+    if(!user._id) {
+      this.props.userAction({close: false});
+    }
+  }
+
   render() {
+    const { user } = this.props;
+    if(!user._id) {
+      return null;
+    }
     return (
       <div>
         <Head />
@@ -126,5 +142,9 @@ class Write extends React.Component {
   }
 }
 
+export default (connect(
+  (state) => ({ user: state.user }),
+  { userAction }
+)(Write));
 
-export default Write;
+// export default Write;

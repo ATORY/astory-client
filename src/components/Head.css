@@ -24,6 +24,33 @@ header .logos {
   left: 0;
 }
 
-header .signs {
+
+header .signs, header .user-head {
   line-height: 75px;
+}
+
+header .signs > div, header .user-head > div {
+  display: inline-block;
+}
+
+header div.user-head-info {
+  width: 150px;
+  text-align: right;
+}
+
+header div.user-head-info img{
+  width: 45px;
+  height: 45px;
+  vertical-align: middle;
+}
+
+header .signs div.btns {
+  color: #00897b; 
+}
+
+header .signs div.btns button {
+  width: 45px;
+  margin: 0 5px;
+  color: inherit;
+  /* border: 1px solid #00897b; */
 }

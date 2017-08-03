@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import {
   ApolloClient,
   ApolloProvider,
@@ -12,12 +13,20 @@ import {
   Switch,
 } from 'react-router-dom';
 
+import thunk from 'redux-thunk';
+
 import './App.css';
 
 import { Home, Typed, Article, NotFound, Write } from './page';
+import { userReducer } from './reducers';
+
+import Login from './Login';
 
 const networkInterface = createNetworkInterface({ 
-  uri: 'http://localhost:4000/graphql' 
+  uri: 'http://localhost:4000/graphql',
+  opts: {
+    credentials: 'include',
+  }
 });
 
 networkInterface.use([{
@@ -50,10 +59,24 @@ const client = new ApolloClient({
   }
 });
 
+const store = createStore(
+  combineReducers({
+    // todos: todoReducer,
+    user: userReducer,
+    apollo: client.reducer(),
+  }),
+  {}, // initial state
+  compose(
+      applyMiddleware(client.middleware(), thunk),
+      // If you are using the devToolsExtension, you can add it here also
+      (typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined') ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
+  )
+);
+
 class App extends Component {
   render() {
     return (
-      <ApolloProvider client={client}>
+      <ApolloProvider client={client} store={store} >
         <BrowserRouter>
           <div className="App">
             <Switch>
@@ -63,6 +86,7 @@ class App extends Component {
               <Route path="/" component={Home}/>
               <Route component={ NotFound }/>
             </Switch>
+            <Login />
           </div>
         </BrowserRouter>
       </ApolloProvider>
