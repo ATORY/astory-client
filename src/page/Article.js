@@ -21,7 +21,7 @@ query ArticleQuery($articleId: ID!) {
 `
 
 const Article = ({ match, data: { loading, error, article } }) => {
-
+  console.log('-----', loading, article)
   if (loading) {
     return <ArticlePreview articleId={match.params.articleId}/>
   }

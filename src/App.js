@@ -32,25 +32,16 @@ networkInterface.use([{
   },
 }]);
 
-function dataIdFromObject (result) {
-  if (result.__typename) {
-    if (result._id !== undefined) {
-      return `${result.__typename}:${result._id}`;
-    }
-  }
-  return null;
-}
-
 const client = new ApolloClient({
   networkInterface,
-  dataIdFromObject,
   customResolvers: {
     Query: {
       article: (_, { _id }) => {
-        return toIdValue(dataIdFromObject({
+        const article = toIdValue(client.dataIdFromObject({
           __typename: 'Article',
           _id,
         }))
+        return article;
       }
     }
   }
